@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="www.dream.com.framework.hashTagAnalyzer.model.mapper.HashTagMapper">
+	<resultMap id="hashTagResultMap"
+		type="www.dream.com.framework.hashTagAnalyzer.model.HashTagVO">
+
+		<id property="id" column="id"></id>
+		<result property="word" column="word" />
+		<result property="descript" column="descript" />
+	</resultMap>
+	
+	<select id="findExisting" resultMap="hashTagResultMap">
+		select id, word, descript
+		  from T_Hash_Tag
+		 where word in
+		 <foreach item="word" collection="array" open="(" separator="," close=")">
+				#{word}
+		 </foreach> 
+	</select>
+</mapper>

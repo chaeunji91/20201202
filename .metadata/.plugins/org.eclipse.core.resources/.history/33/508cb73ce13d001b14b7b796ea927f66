@@ -1,0 +1,6 @@
+package www.dream.com.framework.dataType;
+
+public class Pair<F, S> {
+	private F first;
+	private S secondl
+}

@@ -1,0 +1,5 @@
+package www.dream.com.framework.hashTagAnalyzer.model;
+
+public class HashTagVO {
+
+}

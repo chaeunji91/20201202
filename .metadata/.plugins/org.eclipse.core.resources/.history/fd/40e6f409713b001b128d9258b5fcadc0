@@ -1,0 +1,28 @@
+drop sequence seq4hashTag_id;
+
+drop table T_Hash_Tag;
+
+
+create sequence seq4hashTag_id;
+
+--id, super_id, word, descript
+create table T_Hash_Tag (
+	id					numeric(22, 0) primary key,
+	super_id			numeric(22, 0),
+	word				varchar2(30),
+	descript			varchar2(2000)	
+);
+create index idx_HT_word on T_Hash_Tag(word);
+--동음이의어(여러개 들어와야함) word에 대하여 unique index 달면 안됨, idx: 성능
+
+--owner_id, responsable_id
+create table T_Tag_rel (
+	owner_id			numeric(22, 0),
+	responsable_id		numeric(22, 0),
+	primary key(owner_id, responsable_id)	
+);
+insert into T_Hash_Tag(id, super_id, word, descript)
+values(seq4hashTag_id.nextval, null, 'IT', '나 괴롭다'); --1
+
+create index idx_acc_res2owner on T_Accountability(responsable_id, type_name, owner_id);
+

@@ -1,0 +1,24 @@
+drop sequence seq4hashTag_id;
+
+drop table T_Hash_Tag;
+
+
+create sequence seq4hashTag_id;
+
+--type_name, descript
+create table T_Hash_Tag (
+	id					numeric(22, 0) primary key,
+	super_id			numeric(22, 0),
+	word				varchar2(30),
+	descript			varchar2(2000)
+			
+);
+create table T_Tag_rel (
+	owner_id			numeric(22, 0),
+	responsable_id		numeric(22, 0),
+	primary key(owner_id, responsable_id)	
+);
+
+
+create index idx_acc_res2owner on T_Accountability(responsable_id, type_name, owner_id);
+

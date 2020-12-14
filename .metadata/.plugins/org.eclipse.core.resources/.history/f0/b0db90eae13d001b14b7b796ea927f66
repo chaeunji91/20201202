@@ -1,0 +1,9 @@
+package www.dream.com.framework.hashTagAnalyzer.model;
+
+public class HashTagVO {
+	
+	private long id;
+	private String word;
+	private String descript;
+	private HashTagVO superHashTag;
+}

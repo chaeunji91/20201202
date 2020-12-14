@@ -1,0 +1,30 @@
+package www.dream.com.framework.hashTagAnalyzer.service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.springframework.stereotype.Service;
+
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
+import kr.co.shineware.util.common.model.Pair;
+
+@Service
+public class KomoranService {
+	
+	public Set<String> countTotalPostWithPaging(String...varText) {
+		String modelPath = "models";
+        Komoran komoran = new Komoran(modelPath);
+        
+        Set<String> ret = new TreeSet<>();
+		for(String text : varText) {
+		
+	        KomoranResult komoranResult = komoran.analyze("청하는아이오아이출신입니다");
+	        List<Pair<String, String>> sentence = komoranResult.getList();
+	        for (Pair<String, String> token : sentence)
+	            System.out.println(token);
+		}
+		return ret;
+	}
+}

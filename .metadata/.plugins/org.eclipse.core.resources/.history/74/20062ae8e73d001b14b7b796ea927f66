@@ -1,0 +1,5 @@
+package www.dream.com.framework.hashTagAnalyzer.model.mapper;
+
+public interface HashTagMapper {
+
+}

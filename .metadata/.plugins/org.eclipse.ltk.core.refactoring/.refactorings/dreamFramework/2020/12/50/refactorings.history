@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy package &apos;www.dream.com.framework.display&apos; to &apos;ch09_post/src/main/java&apos;&#x0D;&#x0A;- Original project: &apos;dreamFramework&apos;&#x0D;&#x0A;- Destination element: &apos;ch09_post/src/main/java&apos;&#x0D;&#x0A;- Original element: &apos;dreamFramework/src/www.dream.com.framework.display&apos;" description="Copy package" destination="=ch09_post/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/" element1="/src&lt;www.dream.com.framework.display" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1607474080388" version="1.0"/>
+</session>

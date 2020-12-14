@@ -1,0 +1,19 @@
+package www.dream.com.framework.hashTagAnalyzer.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class KomoranService {
+	
+	public List<String> countTotalPostWithPaging(String...varText) {
+		List<String> ret = new ArrayList<>();
+		for(String text : varText) {
+			
+		}
+		return ret;
+	}
+	
+}

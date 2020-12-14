@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="CH02_DI"/>
+<aop-project name="ORM_HowTo"/>
+<aop-project name="ch15_searching"/>
+<aop-project name="CH05_SpringMVCBasicArchitecture"/>
+<aop-project name="ch09_post"/>
+<aop-project name="POM_Completed"/>
+</aop-reference-model>
