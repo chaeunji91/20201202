@@ -147,7 +147,7 @@
 	</select>
 
 	<insert id="registerPost">
-		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long"> <!-- side effect 체계 -->
 			select seq4Reply_id.nextval from dual
 		</selectKey>
 		<![CDATA[

@@ -1,0 +1,9 @@
+package www.dream.com.framework.hashTagAnalyzer.mapper;
+
+public class ToCheckIDCollision extends Thread {
+
+	@Override
+	public void run() {
+		
+	}
+}

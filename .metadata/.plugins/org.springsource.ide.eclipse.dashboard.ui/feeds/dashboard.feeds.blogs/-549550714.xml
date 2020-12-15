@@ -5,7 +5,536 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2020-12-11T12:25:46Z</updated>
+  <updated>2020-12-14T16:30:46Z</updated>
+  <entry>
+    <title>Case Study: Change Data Capture (CDC) Analysis with CDC Debezium source and Analytics sink in Real-Time</title>
+    <link rel="alternate" href="https://spring.io/blog/2020/12/14/case-study-change-data-capture-cdc-analysis-with-cdc-debezium-source-and-analytics-sink-in-real-time" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Christian Tzolov</name>
+    </author>
+    <id>tag:spring.io,2020-12-10:4295</id>
+    <updated>2020-12-14T16:30:46Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;This article is part of a blog series that explores the newly redesigned Spring Cloud Stream applications based on Java Functions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here are all the previous parts of this blog series.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/07/13/introducing-java-functions-for-spring-cloud-stream-applications-part-0"&gt;Introducing Function Based Streaming Applications&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/07/20/introducing-java-functions-for-spring-cloud-stream-applications-part-1"&gt;Function Composition with Streaming Applications&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/07/27/creating-a-supplier-function-and-generating-spring-cloud-stream-source"&gt;How to Build a Supplier and Source Application&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/08/03/creating-a-function-for-consuming-data-and-generating-spring-cloud-stream-sink-applications"&gt;How to Build a Consumer and Sink Application&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/08/10/case-study-build-and-run-a-streaming-application-using-an-http-source-and-a-jdbc-sink"&gt;Build and Run a Simple Stream Application&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/08/17/case-study-http-request-function-and-processor"&gt;Case Study: HTTP Request Function and Processor&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/08/25/case-study-reading-from-a-file-and-writing-to-mongodb"&gt;Case Study: File Source and MongoDB Sink&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/09/10/case-study-relational-database-source-and-file-sink"&gt;Case Study: Relational Database Source and File Sink&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/09/29/case-study-remote-file-ingest-with-spring-cloud-data-flow"&gt;Case Study: Remote File Ingest with Spring Cloud Data Flow&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/10/26/case-study-aggregator-function-and-processor"&gt;Case Study: Aggregator Function and Processor&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://spring.io/blog/2020/11/16/case-study-elasticsearch-sink"&gt;Case Study: Elasticsearch sink&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In this post, we will look at the &lt;a href="https://github.com/spring-cloud/stream-applications/blob/master/applications/source/cdc-debezium-source/README.adoc"&gt;Debezium CDC source&lt;/a&gt; that allows us to capture database changes from databases such as MySQL, PostgreSQL, MongoDB, Oracle, DB2 and SQL Server and process those changes, in real-time, over various message binders, such as RabbitMQ, Apache Kafka, Azure Event Hubs, Google PubSub and Solace PubSub+ to name a few.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Also we will reveal how to use the &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/sink/analytics-sink"&gt;Analytics sink&lt;/a&gt; to convert the captured database changes into metrics and publish them to various monitoring systems for further analysis.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This article starts by explaining the &lt;code&gt;CDC supplier&lt;/code&gt; and the &lt;code&gt;Analytics consumer&lt;/code&gt; components, showing how to customize and use them programmatically in your own Spring applications. Next we explain how the &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/source/cdc-debezium-source"&gt;CDC source&lt;/a&gt; and the &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/sink/analytics-sink"&gt;Analytics sink&lt;/a&gt;, build upon the supplier and the consumer,  to provide  out of the box, ready to use streaming applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Finally we will demo how easy is it to use &lt;a href="https://dataflow.spring.io"&gt;Spring Cloud Data Flow (SCDF)&lt;/a&gt; for deploying streaming pipelines that react, in real-time, to database updates, convert the change events into analytics metrics and publish them to Prometheus for analysis and visualization with Grafana:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="videoblock"&gt;
+&lt;div class="content"&gt;
+&lt;iframe width="100%" height="480" src="https://www.youtube.com/embed/8GVcpC9-hJk?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="change-data-capture"&gt;&lt;a class="anchor" href="#change-data-capture"&gt;&lt;/a&gt;Change Data Capture&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Change Data Capture (CDC) is a technique for observing all data changes written to a database and publishing them as events that can be processed in a streamed fashion.
+As your application database is always changing, the CDC allows you to react to those  changes and lets your applications stream every row-level change in the same order as they were committed to the database.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;CDC enables a multitude of use-cases such as: cache invalidation, in-memory data views,  update search indexes, data replication by  keeping different data sources in sync, real-time fraud detection, storing audit trails, data provenance and much more.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The Spring Cloud Data Flow &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/source/cdc-debezium-source"&gt;CDC Source&lt;/a&gt; application is built around &lt;a href="https://debezium.io/"&gt;Debezium&lt;/a&gt;, a popular, open source, log-based CDC implementation that supports various databases.
+The CDC Source supports a variety of message binders, including Apache Kafka, Rabbit MQ, Azure Event Hubs, Google PubSub, Solace PubSub+.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock note"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Note&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+The &lt;code&gt;CDC source&lt;/code&gt; implementation embeds the &lt;a href="https://debezium.io/documentation/reference/development/engine.html"&gt;Debezium Engine&lt;/a&gt; and it does not depend on Apache Kafka nor ZooKeeper!
+You can use the &lt;code&gt;CDC source&lt;/code&gt; along with any of the supported message binders!
+The the &lt;code&gt;Debezium Engine&lt;/code&gt; though comes with some &lt;a href="https://debezium.io/documentation/reference/development/engine.html#_handling_failures"&gt;limitations&lt;/a&gt; to be considered.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="cdc-debezium-supplier"&gt;&lt;a class="anchor" href="#cdc-debezium-supplier"&gt;&lt;/a&gt;CDC Debezium Supplier&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/functions/supplier/cdc-debezium-supplier"&gt;CDC Debezium Supplier&lt;/a&gt; is implemented as &lt;code&gt;java.util.function.Supplier&lt;/code&gt; bean which when invoked will deliver the contents of the files in a given directory. The file supplier has the following signature:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="java"&gt;Supplier&amp;lt;Flux&amp;lt;Message&amp;lt;?&amp;gt;&amp;gt;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The users of the supplier can subscribe to the returned &lt;code&gt;Flux&amp;lt;Message&amp;lt;?&amp;gt;&lt;/code&gt;, which is a stream of messages or &lt;a href="https://debezium.io/documentation/reference/configuration/event-flattening.html#_change_event_structure"&gt;CDC Change Events&lt;/a&gt;, that have a complex structure. Each event consists of three parts (e.g. &lt;code&gt;metadata&lt;/code&gt;, &lt;code&gt;before&lt;/code&gt; and &lt;code&gt;after&lt;/code&gt;) as shown in the following payload sample:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="json"&gt;{
+  "before": { ... },  // row data before the change.
+  "after": { ... },  // row data after the change.
+  "source": {  //  the names of the database and table where the change was made.
+    "connector": "mysql", "server_id": 223344,"snapshot": "false",
+    "name": "my-app-connector", "file": "mysql-bin.000003", "pos": 355, "row": 0,
+    "db": "inventory",  // source database name.
+    "table": "customers", // source table name.
+  },
+  "op": "u",  // operation that made the change.
+  "ts_ms": 1607440256301, // timestamp - when the change was made.
+  "transaction": null  // transaction information (optional).
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If the &lt;code&gt;cdc.flattening.enabled&lt;/code&gt; property is set to &lt;code&gt;true&lt;/code&gt;, then only the &lt;code&gt;after&lt;/code&gt; section is passed as a standalone message.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In order to invoke the CDC supplier, we need to specify a source database to receive the CDC events from. The &lt;code&gt;cdc.connector&lt;/code&gt; property is used to choose between the supported &lt;code&gt;mysql&lt;/code&gt;, &lt;code&gt;postgres&lt;/code&gt;, &lt;code&gt;sql server&lt;/code&gt;, &lt;code&gt;db2&lt;/code&gt;, &lt;code&gt;oracle&lt;/code&gt;, &lt;code&gt;cassandra&lt;/code&gt; and &lt;code&gt;mongo&lt;/code&gt; source database types..
+The &lt;code&gt;cdc.config.database.*&lt;/code&gt; properties help to configure the the source access. Here is a sample configuration for connecting to a MySQL databases:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;# DB type
+cdc.connector=mysql
+
+# DB access
+cdc.config.database.user=debezium
+cdc.config.database.password=dbz
+cdc.config.database.hostname=localhost
+cdc.config.database.port=3306
+
+# DB source metadata
+cdc.name=my-sql-connector
+cdc.config.database.server.id=85744
+cdc.config.database.server.name=my-app-connector&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;cdc.name, cdc.config.database.server.id&lt;/code&gt; and &lt;code&gt;cdc.config.database.server.name&lt;/code&gt; properties are used to identify and dispatch the incoming events.
+Optionally you can set the &lt;code&gt;cdc.flattening.enabled=true&lt;/code&gt; to flatten the CDC events to replace the original change event with only its after field to create a simple Kafka record.
+Optionally use the &lt;code&gt;cdc.schema=true&lt;/code&gt; to include the DB schema to the CDC events.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock note"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Note&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+The source database must be configured to expose its &lt;code&gt;Write-Ahead Log API&lt;/code&gt; for the Debezium to be able to connect and consume CDC events. The &lt;a href="https://debezium.io/documentation/reference/connectors/index.html"&gt;Debezium Connector Documentation&lt;/a&gt; provides fine description of how to enable the CDC for any of the supported databases.
+For the purpose of our demos here we will use a preconfigured &lt;a href="https://hub.docker.com/r/debezium/example-mysql"&gt;MySQL docker image&lt;/a&gt;.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="reusing-cdc-supplier-in-custom-applications"&gt;&lt;a class="anchor" href="#reusing-cdc-supplier-in-custom-applications"&gt;&lt;/a&gt;Reusing CDC Supplier in custom applications&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The CDC supplier is a reusable Spring bean that we can inject in end-user custom applications. Once injected, this can be directly invoked and combined with custom processing of the data. Here is an example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="java"&gt;@Autowired
+Supplier&amp;lt;Flux&amp;lt;Message&amp;lt;?&amp;gt;&amp;gt;&amp;gt; cdcSupplier;
+
+public void consumeDataAndSendEmail() {
+  Flux&amp;lt;Message&amp;lt;?&amp;gt; cdcData = cdcSupplier.get();
+  messageFlux.subscribe(t -&amp;gt; {
+      if (t == something)
+         //send the email here.
+      }
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In the above pseudo-code, we inject the CDC supplier bean and then use it to invoke its &lt;code&gt;get()&lt;/code&gt; method to get a Flux. We then subscribe to that &lt;a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html"&gt;Flux&lt;/a&gt; and each time we receive any data through the Flux, apply some filtering, and take actions based on that. This is just a simple illustration to show how we can reuse the CDC supplier. When you try this in a real application, you probably need to make more adjustments in your implementation, such as converting the default data type of the received data from &lt;code&gt;byte[]&lt;/code&gt; into something else before doing the conditional check.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock tip"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Tip&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+For building a standalone, non-streaming, application you can leverage the &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/functions/common/cdc-debezium-boot-starter"&gt;cdc-debezium-boot-starter&lt;/a&gt;. Just add the &lt;code&gt;cdc-debezium-boot-starter&lt;/code&gt; dependency and implement your custom &lt;code&gt;Consumer&amp;lt;SourceRecord&amp;gt;&lt;/code&gt; handler to process the incoming database change events.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="cdc-debezium-source"&gt;&lt;a class="anchor" href="#cdc-debezium-source"&gt;&lt;/a&gt;CDC Debezium Source&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As we have seen in this blog series, all the out of the box Spring Cloud Stream source applications are already autoconfigured with several out of the box general-purpose processors. You can activate these processors as part of the &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/source/cdc-debezium-source"&gt;CDC source&lt;/a&gt;. Here is an example, where we run the CDC source and receive the data and then transforms the consumed data before sending it out to the destination on middleware.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="bash"&gt;java -jar cdc-debezium-source.jar
+ --cdc.connector=mysql --cdc.name=my-sql-connector
+ --cdc.config.database.server.name=my-app-connector
+ --cdc.config.database.user=debezium --cdc.config.database.password=dbz
+ --cdc.config.database.hostname=localhost --cdc.config.database.port=3306
+ --cdc.schema=true
+ --cdc.flattening.enabled=true
+ --spring.cloud.function.definition=cdcSupplier|spelFunction
+ --spel.function.expression=payload.toUpperCase()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;By providing the value, &lt;code&gt;cdcSupplier|spelFunction&lt;/code&gt; for the &lt;code&gt;spring.cloud.function.definition&lt;/code&gt; property, we are activating the spel function composed with the CDC supplier. Then we provide a SpEL expression that we want to use to transform the data using &lt;code&gt;spel.function.expression&lt;/code&gt;. There are several other functions available to compose this way. Take a look &lt;a href="https://github.com/spring-cloud/stream-applications/blob/master/docs/FunctionComposition.adoc"&gt;here&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="analytics-consumer"&gt;&lt;a class="anchor" href="#analytics-consumer"&gt;&lt;/a&gt;Analytics Consumer&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/functions/consumer/analytics-consumer"&gt;Analytics consumer&lt;/a&gt; provides a function that computes analytics from the input data messages and publishes them as metrics to various monitoring systems. It leverages the &lt;a href="https://micrometer.io/"&gt;micrometer library&lt;/a&gt; for providing a uniform programming experience across the most popular &lt;a href="https://micrometer.io/docs"&gt;monitoring systems&lt;/a&gt; and uses &lt;a href="https://docs.spring.io/spring-integration/reference/html/spel.html#spel"&gt;Spring Expression Language (SpEL)&lt;/a&gt; for defining how the metric names, values and tags are computed from the input data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can use the consumer bean directly in our custom applications to compute analytics from the passing messages. Here is the type signature of the Analytics consumer bean:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="java"&gt;Consumer&amp;lt;Message&amp;lt;?&amp;gt;&amp;gt; analyticsConsumer&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Once injected into a custom application, users can directly invoke the &lt;code&gt;accept()&lt;/code&gt; method of the consumer and provide a &lt;code&gt;Message&amp;lt;?&amp;gt;&lt;/code&gt; object to compute and publish the analytics to the backend monitoring system.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="https://docs.spring.io/spring-integration/reference/html/message.html"&gt;Message&lt;/a&gt; is a generic container for data. Each Message instance includes a &lt;code&gt;payload&lt;/code&gt; and &lt;code&gt;headers&lt;/code&gt; containing user-extensible properties as key-value pairs.
+The SpEL expressions are used to access message¡¯s headers and payload to compute metrics amounts and tags.
+For example a counter metrics can have a value &lt;code&gt;amount&lt;/code&gt; computed from the size of the input message payload add a &lt;code&gt;my_tag&lt;/code&gt; tag, extracted from the &lt;code&gt;kind&lt;/code&gt; header value:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;analytics.amount-expression=payload.lenght()
+analytics.tag.expression.my_tag=headers['kind']&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The Analytics consumer configuration properties start with the &lt;code&gt;analytics.*&lt;/code&gt; prefix. Consult the &lt;a href="https://github.com/spring-cloud/stream-applications/blob/master/functions/consumer/analytics-consumer/src/main/java/org/springframework/cloud/fn/consumer/analytics/AnalyticsConsumerProperties.java"&gt;AnalyticsConsumerProperties&lt;/a&gt; for the available analytics properties.
+The monitoring configuration properties start with a &lt;code&gt;management.metrics.export&lt;/code&gt; prefix. For configuring a particular monitoring system follow the provided &lt;a href="https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/production-ready-features.html#production-ready-metrics-export"&gt;configuration instructions&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="analytics-sink"&gt;&lt;a class="anchor" href="#analytics-sink"&gt;&lt;/a&gt;Analytics Sink&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As in the case of &lt;code&gt;CDC Source&lt;/code&gt;, the Spring Cloud Stream out of the box applications already provide an &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/sink/analytics-sink"&gt;Analytics sink&lt;/a&gt; based on the &lt;code&gt;Analytics consumer&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The sink is available for both &lt;a href="https://repo.spring.io/libs-snapshot-local/org/springframework/cloud/stream/app/mongodb-sink-kafka/3.0.0-SNAPSHOT"&gt;Apache Kafka&lt;/a&gt; and &lt;a href="https://repo.spring.io/libs-snapshot-local/org/springframework/cloud/stream/app/mongodb-sink-rabbit/3.0.0-SNAPSHOT"&gt;RabbitMQ&lt;/a&gt; binder variants.
+When used as a Spring Cloud Stream sink, the Analytics consumer is automatically configured to accept data from the respective middleware system, for example, from a Kafka topic or RabbitMQ exchange.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="running-on-spring-cloud-data-flow"&gt;&lt;a class="anchor" href="#running-on-spring-cloud-data-flow"&gt;&lt;/a&gt;Running on Spring Cloud Data Flow&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Running both &lt;code&gt;CDC source&lt;/code&gt; and &lt;code&gt;Analytics sink&lt;/code&gt; standalone was fine, but Spring Cloud Data Flow makes it really easy to run them as a pipeline. Basically we want to orchestrate data flows that looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/scdf-pipelines.png?raw=true" alt="scdf pipelines" width="30%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;cdc-log&lt;/code&gt; pipeline deploys a &lt;code&gt;cdc-source&lt;/code&gt; that streams all database changes into a &lt;code&gt;log-sink&lt;/code&gt; using  JSON message format. In parallel the &lt;code&gt;cdc-analytics-tap&lt;/code&gt;  pipeline &lt;a href="https://dataflow.spring.io/docs/feature-guides/streams/fanin-fanout/"&gt;taps&lt;/a&gt; the &lt;code&gt;cdc-source&lt;/code&gt; output into an &lt;code&gt;analytics-sink&lt;/code&gt; to compute DB statistics from the CDC events and publish them to time-series database (TSDB) such as Prometheus or Wavefront. The Grafana dashboard is used to visualize those changes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The Spring Cloud Data Flow &lt;a href="https://dataflow.spring.io/docs/installation/"&gt;installation instructions&lt;/a&gt; explains how to install Spring Cloud Data Flow fore any of the supported cloud platforms.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Below, we will briefly provide the steps to set up Spring Cloud Data Flow.
+First, we need to get the docker-compose files for running Spring Cloud Data Flow, &lt;a href="https://dataflow.spring.io/docs/installation/local/docker-customize/#prometheus&amp;#8212;&amp;#8203;grafana"&gt;Prometheus and Grafana&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;wget -O docker-compose.yml https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/v2.7.0/spring-cloud-dataflow-server/docker-compose.yml&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;wget -O docker-compose-prometheus.yml https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/v2.7.0/spring-cloud-dataflow-server/docker-compose-prometheus.yml&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Also, get this additional docker-compose file to install a source MySQL database configured to expose its write-ahead log that the cdc-debezium connects to.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;wget -O mysql-cdc.yml https://gist.githubusercontent.com/tzolov/48dec8c0db44e8086916129201cc2c8c/raw/26e1bf435d58e25ff836e415dae308edeeef2784/mysql-cdc.yml&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The mysql-cdc uses the &lt;a href="https://hub.docker.com/r/debezium/example-mysql"&gt;debezium/example-mysql&lt;/a&gt; image and comes with an inventory, sample database:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/invetory-db.png?raw=true" alt="invetory db" width="50%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We need to set up a few environment variables in order to run Spring Cloud Data Flow properly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="shell"&gt;export DATAFLOW_VERSION=2.7.0
+export SKIPPER_VERSION=2.6.0
+export STREAM_APPS_URI=https://repo.spring.io/libs-snapshot-local/org/springframework/cloud/stream/app/stream-applications-descriptor/2020.0.0-SNAPSHOT/stream-applications-descriptor-2020.0.0-SNAPSHOT.stream-apps-kafka-maven&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now that we have everything ready to go, it is time to start running Spring Cloud Data Flow and all the other ancillary components.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="shell"&gt;docker-compose -f docker-compose.yml -f docker-compose-prometheus.yml -f mysql-cdc.yml up&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock tip"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Tip&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+To use &lt;code&gt;RabbitMQ&lt;/code&gt; instead of &lt;code&gt;Apache Kafka&lt;/code&gt; you can download an additional docker-compose file as explained in the  &lt;a href="https://dataflow.spring.io/docs/installation/local/docker-customize/#rabbitmq-instead-of-kafka"&gt;RabbitMQ Instead of Kafka
+&lt;/a&gt; instructions, and set the &lt;code&gt;STREAM_APPS_URI&lt;/code&gt; variable to &lt;a href="https://repo.spring.io/libs-snapshot-local/org/springframework/cloud/stream/app/stream-applications-descriptor/2020.0.0-SNAPSHOT/stream-applications-descriptor-2020.0.0-SNAPSHOT.stream-apps-rabbit-maven" class="bare"&gt;https://repo.spring.io/libs-snapshot-local/org/springframework/cloud/stream/app/stream-applications-descriptor/2020.0.0-SNAPSHOT/stream-applications-descriptor-2020.0.0-SNAPSHOT.stream-apps-rabbit-maven&lt;/a&gt; instead.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock tip"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Tip&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+To use Wavefront instead of Prometheus &amp;amp; Grafana, follow the &lt;a href="https://dataflow.spring.io/docs/installation/local/docker-customize/#wavefront"&gt;Wavefront&lt;/a&gt; instructions.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Once SCDF is up and running, go to &lt;a href="http://localhost:9393/dashboard"&gt;http://localhost:9393/dashboard&lt;/a&gt;. Then go to &lt;code&gt;Streams&lt;/code&gt; on the left-hand side and select &lt;code&gt;Create Stream&lt;/code&gt;. Select &lt;code&gt;cdc-debezium&lt;/code&gt; from the source applications and &lt;code&gt;log&lt;/code&gt; and &lt;code&gt;analytics&lt;/code&gt; from the sink applications to define the &lt;code&gt;cdc-log = cdc-debezium | log&lt;/code&gt; and the &lt;code&gt;cdc-analytic-tap = :cdc-log.cdc-debezium &amp;gt; analytics&lt;/code&gt; pipelines. You can click on the application&amp;#8217;s options to select the desired properties.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For a quicker bootstrap,  you can copy/paste the following ready to use pipeline definition snippets:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;cdc-log = cdc-debezium --cdc.name=mycdc --cdc.flattening.enabled=false --cdc.connector=mysql --cdc.config.database.user=debezium --cdc.config.database.password=dbz --cdc.config.database.dbname=inventory --cdc.config.database.hostname=mysql-cdc --cdc.config.database.port=3307 --cdc.stream.header.offset=true --cdc.config.database.server.name=my-app-connector --cdc.config.tombstones.on.delete=false | log&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;cdc-analytic-tap = :cdc-log.cdc-debezium &amp;gt; analytics --analytics.name=cdc --analytics.tag.expression.table=#jsonPath(payload,'$..table') --analytics.tag.expression.operation=#jsonPath(payload,'$..op') --analytics.tag.expression.db=#jsonPath(payload,'$..db')&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;cdc-log&lt;/code&gt; pipeline deploys a &lt;code&gt;cdc-debezium source&lt;/code&gt; that connects to an MySQL database at &lt;code&gt;mysql-cdc:3307&lt;/code&gt; and streams the  DB change events to the &lt;code&gt;log sink&lt;/code&gt;. Consult the &lt;a href="https://github.com/spring-cloud/stream-applications/blob/master/applications/source/cdc-debezium-source/README.adoc"&gt;cdc-debezium docs&lt;/a&gt; for the available configuration options.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;cdc-analytic-tap&lt;/code&gt; pipeline taps into the output of the &lt;code&gt;cdc-debezium source&lt;/code&gt; and streams the cdc events to an &lt;code&gt;analytics sink&lt;/code&gt;. The analytics creates a &lt;a href="https://micrometer.io/docs/concepts#_counters"&gt;metrics counter&lt;/a&gt; (called cdc) and uses &lt;a href="https://docs.spring.io/spring-integration/reference/html/spel.html#built-in-spel-functions"&gt;SpEL expressions&lt;/a&gt; to compute metrics tags (e.g. db, table and operations) from the streamed message payloads.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For example, let¡¯s modify the &lt;code&gt;customers&lt;/code&gt; table in the MySQL &lt;code&gt;inventory&lt;/code&gt; database. The update transaction is sent as a change event to the &lt;code&gt;cdc-debezium source&lt;/code&gt;, that converts the native DB event into an uniform message payload like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="json"&gt;{
+  "before": {
+    "id": 1004, "first_name": "Anne", "last_name": "Kretchmar", "email": "annek@noanswer.org"
+  },
+  "after": {
+    "id": 1004, "first_name": "Anne2", "last_name": "Kretchmar", "email": "annek@noanswer.org"
+  },
+  "source": {
+    "version": "1.3.1.Final", "connector": "mysql", "server_id": 223344, "thread": 5,
+    "name": "my-app-connector", "file": "mysql-bin.000003", "pos": 355, "row": 0,
+    "db": "inventory",
+    "table": "customers",
+  },
+  "op": "u",
+  "ts_ms": 1607440256301,
+  "transaction": null
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The following SpEL expressions are used to compute 3 tags (&lt;code&gt;db&lt;/code&gt;, &lt;code&gt;table&lt;/code&gt;, &lt;code&gt;operation&lt;/code&gt;) from the CDC message payload. Those tags are assigned to every cdc metrics published to Prometheus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;--analytics.tag.expression.db=#jsonPath(payload,'$..db')
+--analytics.tag.expression.table=#jsonPath(payload,'$..table')
+--analytics.tag.expression.operation=#jsonPath(payload,'$..op')&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Here is a screenshot of how it should look after all the properties are selected:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/scdf-create-streams.png?raw=true" alt="scdf create streams" width="100%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://dataflow.spring.io/docs/stream-developer-guides/getting-started/stream/#creating-the-stream"&gt;Create&lt;/a&gt; and  &lt;a href="https://dataflow.spring.io/docs/stream-developer-guides/getting-started/stream/#deploying-a-stream"&gt;deploy&lt;/a&gt; the &lt;code&gt;cdc-log&lt;/code&gt; and the &lt;code&gt;cdc-analytics-tap&lt;/code&gt; pipelines, accepting all the default options. Optionally you can use the &lt;code&gt;Group Actions&lt;/code&gt; to deploy both streams simultaneously.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Once the streams are deployed you can check the logs of the deployed applications via the SCDF UI or using the Skipper docker container as &lt;a href="https://dataflow.spring.io/docs/stream-developer-guides/getting-started/stream/#results"&gt;explained&lt;/a&gt; in the documentation.
+If you check the logs of the Log sink application you should see the CDC JSON messages similar to those:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/cdc-event-log.png?raw=true" alt="cdc event log" width="100%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Next go to the Grafana Dashboard using the &lt;a href="https://dataflow.spring.io/docs/feature-guides/streams/monitoring/#data-flow-metric-buttons"&gt;buttons&lt;/a&gt; (or just open &lt;a href="http://localhost:3000"&gt;localhost:3000&lt;/a&gt;) and login as user:`admin` and password:`admin`. You can explore the &lt;code&gt;Applications&lt;/code&gt; dashboard to check the performance of the deployed pipelines.
+Now you can import the &lt;a href="https://gist.github.com/tzolov/d2a71fc58616278fb8852f5fc43d242f#file-cdc-grafana-dashboard-prometheus-json"&gt;CDC Grafana Dashboard-Prometheus.json&lt;/a&gt; dashboard and see a dashboard similar to this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/grafana-dashboard.png?raw=true" alt="grafana dashboard" width="100%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The following queries have been used to aggregate the &lt;code&gt;cdc_total&lt;/code&gt; metrics inside Prometheus:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code&gt;sort_desc(topk(10, sum(cdc_total) by (db, table)))
+sort_desc(topk(100, sum(cdc_total) by (op)))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock tip"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Tip&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+You can open the Prometheus UI at &lt;a href="http://localhost:9090"&gt;http://localhost:9090&lt;/a&gt; to check the configuration as well as run some ad hoc PQL queries.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="sect3"&gt;
+&lt;h4 id="generate-db-activity"&gt;&lt;a class="anchor" href="#generate-db-activity"&gt;&lt;/a&gt;Generate DB activity&lt;/h4&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can connect to the inventory CDC MySQL databases at &lt;code&gt;localhost:3307&lt;/code&gt; (user: &lt;code&gt;root&lt;/code&gt; and password: &lt;code&gt;debezium&lt;/code&gt;) and start modifying the data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The following docker command shows how to connect to the mysql-cdc:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="bash"&gt;docker exec -it mysql-cdc  mysql -uroot -pdebezium --database=inventory&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The following  script helps to generate multiple insert, update and delete DB transactions:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code data-lang="bash"&gt;for i in {1..100}; do docker exec -it mysql-cdc  mysql -uroot -pdebezium --database=inventory -e'INSERT INTO customers (first_name, last_name, email) VALUES ("value1", "value2", "val@bla"); UPDATE customers SET first_name="value2" WHERE first_name="value1"; DELETE FROM customers where first_name="value2";'; done&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You will see the &lt;code&gt;log-sink&lt;/code&gt; logs reflecting those changes as well as the CDC dashboard charts updates.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="conclusions-and-future-work"&gt;&lt;a class="anchor" href="#conclusions-and-future-work"&gt;&lt;/a&gt;Conclusions and future work&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In this blog, we saw how the CDC-debezium supplier and the Analytics consumer functions and their corresponding Spring Cloud Stream source and sink work. The supplier and consumer functions can be injected into custom applications for combining with other business logic.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The source and the sink applications are provided out of the box for use with Kafka and RabbitMQ middleware variants.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You can easily build standalone applications combining the Cdc-debezium supplier with Geode consumer to create and maintain an in-memory view of your database data. Similarly you can combine the Cdc-debezium supplier with the Elasticsearch consumer for maintaining in real-time a searchable index for your database data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What is more exciting is that you can realize the above scenarios using the OOTB &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/source/cdc-debezium-source"&gt;cdc-debezium source&lt;/a&gt; , &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/sink/geode-sink"&gt;geode sink&lt;/a&gt; and &lt;a href="https://github.com/spring-cloud/stream-applications/tree/master/applications/sink/elasticsearch-sink"&gt;elasticsearch sink&lt;/a&gt; applications. You can build those pipelines over different message binders and source databases.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This &lt;a href="https://www.infoq.com/presentations/spring-pipeline-prometheus-grafana/?utm_campaign=infoq_content&amp;amp;utm_source=twitter&amp;amp;utm_medium=feed&amp;amp;utm_term=Devops"&gt;Spring One presentation&lt;/a&gt; demonstrates an advanced use-case,  using CDC-debezium and Machine Learning to build a streaming data pipeline for credit card fraud detection.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://github.com/spring-cloud/stream-applications/blob/gh-pages/img/cdc-analytics/cdc-fraud-detection.png?raw=true" alt="cdc fraud detection" width="50%"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We still have a few more episodes coming up in this blog series. Please stay tuned.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
   <entry>
     <title>Spring Statemachine 3.0.0-RC1 Released</title>
     <link rel="alternate" href="https://spring.io/blog/2020/12/11/spring-statemachine-3-0-0-rc1-released" />
@@ -790,41 +1319,6 @@ compile &amp;#39;org.springframework.cloud:spring-cloud-starter-netflix-eureka-c
   &lt;li&gt;&lt;a href="https://github.com/ingogriebsch/spring-hateoas-siren"&gt;A library implementing Siren as a custom Spring HATEOAS hypermedia type. Siren is a hypermedia specification for representing entities.&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="https://www.theverge.com/platform/amp/2020/11/25/21719396/amazon-web-services-aws-outage-down-internet?__twitter_impression=true"&gt;A reminder that multi cloud is a necessity: prolonged AWS outage takes down a big chunk of the internet - The Verge&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>Spring Cloud Open Service Broker 3.2.0 Released</title>
-    <link rel="alternate" href="https://spring.io/blog/2020/11/30/spring-cloud-open-service-broker-3-2-0-released" />
-    <category term="releases" label="Releases" />
-    <author>
-      <name>Roy Clarkson</name>
-    </author>
-    <id>tag:spring.io,2020-11-30:4279</id>
-    <updated>2020-11-30T20:12:22Z</updated>
-    <content type="html">&lt;p&gt;We are pleased to announce the general availability of Spring Cloud Open Service Broker 3.2.0. Version 3.2.0 is upgraded to Spring Boot 2.3, and addresses a few issues related to OSB API v2.15 support. It is feature compatible with the 3.1.2 release, and includes the following:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Upgrade to Spring Boot 2.3.6.RELEASE (#310)&lt;/li&gt;
-  &lt;li&gt;Return HTTP 400 Bad Request for unknown instance in last operation (#306)&lt;/li&gt;
-  &lt;li&gt;Fix &lt;code&gt;MaintenanceInfo.toString&lt;/code&gt; (#301 via @gberche-orange)&lt;/li&gt;
-  &lt;li&gt;Replace dependency management plugin with Gradle platform dependencies (#298)&lt;/li&gt;
-  &lt;li&gt;Add &lt;code&gt;MaintenanceInfo&lt;/code&gt; to &lt;code&gt;CreateServiceInstanceRequest&lt;/code&gt; and &lt;code&gt;UpdateServiceInstanceRequest&lt;/code&gt; (#290)&lt;/li&gt;
-  &lt;li&gt;Return the operation in the HTTP 202 response body when an async operation is in progress and another request is received for the same service instance (#284)&lt;/li&gt;
-  &lt;li&gt;Update Gradle build to use native Gradle facilities for publishing artifacts (#280)&lt;/li&gt;
-  &lt;li&gt;Update javadoc to better reflect the OSBA spec (#279 via @mateusz-stefanski)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Include the following Spring Boot starter:&lt;/p&gt;
-&lt;p&gt;Gradle:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint"&gt;implementation(&amp;quot;org.springframework.cloud:spring-cloud-starter-open-service-broker:3.2.0&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Maven:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="prettyprint"&gt;&amp;lt;dependency&amp;gt;&#xD;
-  &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
-  &amp;lt;artifactId&amp;gt;spring-cloud-starter-open-service-broker&amp;lt;/artifactId&amp;gt;&#xD;
-  &amp;lt;version&amp;gt;3.2.0&amp;lt;/version&amp;gt;&#xD;
-&amp;lt;/dependency&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Spring Cloud Open Service Broker is a framework for building Spring Boot applications that implement the Open Service Broker API. The &lt;a href="https://www.openservicebrokerapi.org"&gt;Open Service Broker API&lt;/a&gt; project allows developers to deliver services to applications running within cloud native platforms such as Cloud Foundry, Kubernetes, and OpenShift.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://spring.io/projects/spring-cloud-open-service-broker"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-cloud/spring-cloud-open-service-broker"&gt;GitHub&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-open-service-broker/docs/3.2.0/reference/"&gt;Reference Doc&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-open-service-broker/docs/3.2.0/apidocs/"&gt;API Doc&lt;/a&gt; &lt;/p&gt;
 &lt;!-- rendered by Sagan Renderer Service --&gt;</content>
   </entry>
 </feed>

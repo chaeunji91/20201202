@@ -1,0 +1,45 @@
+package www.dream.com.framework.hashTagAnalyzer.mapper;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.sun.tools.javac.util.List;
+
+import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
+import www.dream.com.framework.hashTagAnalyzer.model.mapper.HashTagMapper;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("file:src\\main\\webapp\\WEB-INF\\spring\\root-context.xml")
+public class HashTagMapperTest {
+	@Autowired
+	private HashTagMapper hashTagMapper;
+	
+	@Test
+	public void findExisting() {
+		try { 
+			for (HashTagVO hashTagVO : hashTagMapper.findExisting(new String[] {"IT", "자두", "영등포"}))
+				System.out.println(hashTagVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void createHashTagByBatch() {
+		try { 
+			List<HashTagVO> listNewTag = new ArrayList<>();
+			HashTagVO ddd = new HashTagVO();
+			ddd.setWord("AAAA");
+			listNewTag.add(ddd);
+			ddd.setWord("BBBB");
+			listNewTag.add(ddd);
+			hashTagMapper.createHashTag(listNewTag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

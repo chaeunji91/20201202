@@ -1,7 +1,5 @@
-drop sequence seq4hashTag_id;
 drop table T_Hash_Tag;
 
-create sequence seq4hashTag_id;
 
 --id, super_id, word, descript
 create table T_Hash_Tag (
@@ -13,17 +11,22 @@ create table T_Hash_Tag (
 create index idx_HT_word on T_Hash_Tag(word);
 --동음이의어(여러개 들어와야함) word에 대하여 unique index 달면 안됨, idx: 성능
 
+--T_Hash_Tag에서 id의 index를 활용해서 첫번째 나오는 것(풀스캔 하면 큰일남)
+select id + 1
+  from T_Hash_Tag
+ where rownum = 1 
+ order by id desc
 
 insert into T_Hash_Tag(id, super_id, word, descript)
-     values(seq4hashTag_id.nextval, null, 'IT', '나 괴롭다'); --1
+     values(1, null, 'IT', '나 괴롭다'); --1
 insert into T_Hash_Tag(id, super_id, word, descript)
-     values(seq4hashTag_id.nextval, 1, 'ProgramingLanguage', '개발 언어'); --2
+     values(2, 1, 'ProgramingLanguage', '개발 언어'); --2
 insert into T_Hash_Tag(id, super_id, word, descript)
-     values(seq4hashTag_id.nextval, 2, 'java', '자바를 잡아보장'); --3
+     values(3, 2, 'java', '자바를 잡아보장'); --3
 insert into T_Hash_Tag(id, super_id, word, descript)
-     values(seq4hashTag_id.nextval, 3, 'thread', '성능 높이자'); --4
+     values(4, 3, 'thread', '성능 높이자'); --4
 insert into T_Hash_Tag(id, super_id, word, descript)
-     values(seq4hashTag_id.nextval, 3, 'lamda', '편리한 함수지향 개발'); --5
+     values(5, 3, 'lamda', '편리한 함수지향 개발'); --5
 
 --it인 애를 찾아서 그거를 super로 가지는 애도 찾고, 그에 해당하는 id까지도 찾음(top down 방식 조회: 검색성능높이기)   
 SELECT *

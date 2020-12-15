@@ -6,4 +6,6 @@ import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
 
 public interface HashTagMapper {
 	public List<HashTagVO> findExisting(String[] arrHashTag);
+	public long selectNewID();
+	public int createHashTag(List<HashTagVO> listHashTag);
 }

@@ -1,0 +1,43 @@
+package www.dream.com.framework.hashTagAnalyzer.service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.springframework.stereotype.Service;
+
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
+import kr.co.shineware.util.common.model.Pair;
+import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
+
+@Service
+public class HashTagService {
+	private static Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+	
+	private static Set<String> setTargetLexiconType = new TreeSet<>();
+	static {
+		setTargetLexiconType.add("SL");
+		setTargetLexiconType.add("NA");
+		setTargetLexiconType.add("NNG");
+		setTargetLexiconType.add("NNP");
+	}
+	public static Set<String> extractHashTag(String...varText) {
+        Set<String> ret = new TreeSet<>();
+        
+		for(String text : varText) {
+		
+	        KomoranResult komoranResult = komoran.analyze(text);
+	        List<Pair<String, String>> sentence = komoranResult.getList();
+	        for (Pair<String, String> token : sentence) {
+	            if (setTargetLexiconType.contains(token.getSecond()))
+	            	ret.add(token.getFirst());
+	        }
+		}
+		return ret;
+	}
+	public www.dream.com.framework.dataType.DreamPair<List<HashTagVO>, List<HashTagVO>> split(String[] arrHashTag) {
+		return null;
+	}
+}

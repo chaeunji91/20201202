@@ -1,20 +1,28 @@
 package www.dream.com.framework.hashTagAnalyzer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import kr.co.shineware.util.common.model.Pair;
+import www.dream.com.framework.dataType.DreamPair;
 import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
+import www.dream.com.framework.hashTagAnalyzer.model.mapper.HashTagMapper;
 
 @Service
 public class HashTagService {
 	private static Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+	
+	@Autowired
+	private HashTagMapper hashTagMapper;
 	
 	private static Set<String> setTargetLexiconType = new TreeSet<>();
 	static {
@@ -37,7 +45,50 @@ public class HashTagService {
 		}
 		return ret;
 	}
-	public www.dream.com.framework.dataType.Pair<List<HashTagVO>, List<HashTagVO>> split(String[] arrHashTag) {
-		return null;
+	/**
+	 * @param arrHashTag
+	 * @return first: 있는 것. 즉 교집합, second : 새로운 단어
+	 */
+	public DreamPair<List<HashTagVO>, List<HashTagVO>> split(String[] arrHashTag) {
+		/*아래와 동일한 기능을 고전적 잘못된 방식으로 개발한 사례
+		 * 	
+		List<HashTagVO> listFullTag = new ArrayList<>();
+		List<HashTagVO> listNewTag = new ArrayList<>();
+		O:
+		for (String aWord : arrHashTag) {
+			for (HashTagVO e : listExistingㅇㅇㅇ) {
+				if(e.getWord().equals(aWord)) {
+					continue O;
+				}
+			}
+			HashTagVO ccc = new HashTagVO();
+			ccc.setWord(aWord);
+			listNewTag.add(ccc);
+		}
+		 */
+		/* 가독성, 성능 높이는 방법 */
+		//배열에서 주어진 단어를 바탕으로 전체 단어 객체를 만들었음
+		List<HashTagVO> listFullTag = new ArrayList<>();
+		for (String aWord : arrHashTag) {
+			HashTagVO ht = new HashTagVO();
+			ht.setWord(aWord);
+			listFullTag.add(ht);
+		}
+		//기존 테이블에서 관리 중인 단어 객체를 찾음
+		List<HashTagVO> listExisting = hashTagMapper.findExisting(arrHashTag);
+		//eHashTagVO.equals 기능을 word를 바탕으로 만들어서 일골 삭제함.
+		//따라서 새로이 나타난 단어들을 찾음
+		listFullTag.removeAll(listExisting); //한번 겹치는것을 없앰
+		return new DreamPair<>(listExisting, listFullTag);
+	}
+	
+	@Transactional
+	public void createHashTag(List<HashTagVO> listHashTag) {
+		long newID = hashTagMapper.selectNewID();
+		for(HashTagVO obj : listHashTag) {
+			obj.setId(newID++);
+		}
+		hashTagMapper.createHashTag(listHashTag); 
+		//새로운 단어가 쏟아질때, id충돌이 없니? Transactional 잘 돌아가니(병행처리 good)? 테스트필수
 	}
 }

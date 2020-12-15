@@ -13,4 +13,23 @@ public class HashTagVO {
 	
 	private HashTagVO superHashTag;
 	private List<HashTagVO> childHashTag;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		HashTagVO other = (HashTagVO) obj;
+		
+		if (word == null) {
+			if (other.word != null)
+				return false;
+		} else if (!word.equals(other.word))
+			return false;
+		return true;
+	}	
 }

@@ -1,5 +1,8 @@
 package www.dream.com.framework.hashTagAnalyzer.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
 import www.dream.com.framework.hashTagAnalyzer.model.mapper.HashTagMapper;
+import www.dream.com.framework.hashTagAnalyzer.service.HashTagService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src\\main\\webapp\\WEB-INF\\spring\\root-context.xml")
@@ -15,11 +19,40 @@ public class HashTagMapperTest {
 	@Autowired
 	private HashTagMapper hashTagMapper;
 	
-	@Test
+	@Autowired
+	private HashTagService hashTagService;
+	
+	//@Test
 	public void findExisting() {
 		try { 
 			for (HashTagVO hashTagVO : hashTagMapper.findExisting(new String[] {"IT", "자두", "영등포"}))
 				System.out.println(hashTagVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 경쟁이 있는 곳(id select가 같은 값이 나온다면 충돌 발생 : duplicate exception)은 
+	 * 언제나 준 동시적으로 처리 요청하는 기능을 만들어서 안정성을 검사하여야 합니다
+	 * Thread를 이용하는 동시 입력 기능을 연구하세요.
+	 */
+	@Test
+	public void createHashTagByBatch() {
+		try { 
+			for(int i = 0; i<3; i++) {
+				//ToCheckIDCollision dd = new ToCheckIDCollision(hashTagService);
+				//dd.start();
+				List<HashTagVO> listNewTag = new ArrayList<>();
+				HashTagVO ddd = new HashTagVO();
+				ddd.setWord("AAAA");
+				listNewTag.add(ddd);
+				
+				ddd = new HashTagVO();
+				ddd.setWord("BBBB");
+				listNewTag.add(ddd);
+				
+				hashTagService.createHashTag(listNewTag);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
