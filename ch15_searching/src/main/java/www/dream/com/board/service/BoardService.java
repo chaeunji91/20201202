@@ -12,7 +12,7 @@ import www.dream.com.board.model.mapper.BoardMapper;
 public class BoardService {
 	@Autowired
 	private BoardMapper boardMapper;
-	
+
 	public List<BoardVO> selectAllBoard() {
 		return boardMapper.selectAllBoard();
 	}

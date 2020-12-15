@@ -24,15 +24,17 @@ public class ReplyMapperTest {
 			e.printStackTrace();
 		}
 	}
+
 	//@Test
 	public void testFindAllPostWithReply() {
-			try { 
-				for (ReplyVO reply : replyMapper.findAllPostWithReply(1L))
-					System.out.println(reply);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		try { 
+			for (ReplyVO reply : replyMapper.findAllPostWithReply(1L))
+				System.out.println(reply);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
 	//@Test
 	public void testFindAllReply() {
 		try { 
@@ -42,6 +44,7 @@ public class ReplyMapperTest {
 			e.printStackTrace();
 		}
 	}
+
 	//@Test
 	public void testFindReplyWithReply() {
 		try { 
@@ -51,4 +54,5 @@ public class ReplyMapperTest {
 			e.printStackTrace();
 		}
 	}
+
 }

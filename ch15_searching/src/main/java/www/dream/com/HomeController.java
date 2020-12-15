@@ -19,6 +19,7 @@ import www.dream.com.board.service.BoardService;
 public class HomeController {
 	@Autowired
 	private BoardService boardService;
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -31,6 +32,7 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
+		
 		
 		model.addAttribute("listBoard", boardService.selectAllBoard());
 		return "home";

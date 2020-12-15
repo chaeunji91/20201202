@@ -9,16 +9,17 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Caption {
-	public enum WhenUse {all, detail, list, none;
+	public enum WhenUse {
+		all, detail, list, none;
+		
 		public static boolean isTableTarget(WhenUse whenUse) {
-			if (whenUse == all || whenUse == list) 
+			if (whenUse == all || whenUse == list)
 				return true;
 			return false;
 		}
 	};
 	
-	public WhenUse whenUse(); 
+	public WhenUse whenUse();
 	public String caption();
-	
 	
 }

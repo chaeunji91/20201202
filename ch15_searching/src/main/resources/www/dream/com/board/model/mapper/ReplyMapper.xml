@@ -36,6 +36,17 @@
 		<collection property="listReplies"
 			resultMap="replyResultMap" columnPrefix="r_">
 		</collection>
+
+		<collection property="listHashTag"
+			ofType="www.dream.com.framework.hashTagAnalyzer.model.HashTagVO" 
+			columnPrefix="ht_">
+			<constructor>
+				<idArg column="id" javaType="long" />
+			</constructor>
+			<result property="word" column="word" />
+			<result property="descript" column="descript" />
+		</collection>
+
 		<discriminator javaType="String" column="obj_type">
 			<case value="post" resultMap="postWithReplyResultMap" />
 		</discriminator>
@@ -137,17 +148,21 @@
 		select p.id, p.content, p.writer_id, p.obj_type, p.title, p.reg_date, p.update_date, p.board_id, 
 			   w.id w_id, w.name w_name, w.party_type w_party_type,
 			   r.id r_id, r.content r_content, r.obj_type r_obj_type, r.reg_date r_reg_date, r.update_date r_update_date,
-			   rw.id r_w_id, rw.name r_w_name, rw.party_type r_w_party_type
+			   rw.id r_w_id, rw.name r_w_name, rw.party_type r_w_party_type,
+			   ht.id ht_id, ht.word ht_word, ht.descript ht_descript
 		  from T_Reply p
 			   left outer join T_Party w on p.writer_id = w.id
 			   left outer join T_Reply r on p.id = r.original_id
 			   left outer join T_Party rw on r.writer_id = rw.id
+			   left outer join M_HT_Reply mht on p.id = mht.reply_id
+			   left outer join T_Hash_Tag ht on mht.hash_tag_id = ht.id
+			   
 		 where p.id = #{id}
 	]]>
 	</select>
 
 	<insert id="registerPost">
-		<selectKey keyProperty="id" order="BEFORE" resultType="long"> <!-- side effect 체계 -->
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
 			select seq4Reply_id.nextval from dual
 		</selectKey>
 		<![CDATA[

@@ -5,7 +5,11 @@ import java.util.Date;
 import lombok.Getter;
 import www.dream.com.framework.display.Caption;
 import www.dream.com.framework.display.Caption.WhenUse;
-
+/**
+ * 모든 테이블에 있는 관리 정보를 각 vo에 중복적으로 개발해 놓기 보다는
+ * 상속 구조를 활용하여 공통화 시킴
+ * frameworkMapper.xml참조
+ */
 public abstract class CommonMngInfoVO {
 	@Getter
 	@Caption(whenUse=WhenUse.all, caption="등록일")

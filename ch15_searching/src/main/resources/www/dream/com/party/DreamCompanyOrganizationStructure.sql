@@ -16,6 +16,8 @@ insert into T_ContactPoint(party_id, type_name, contact_point)
 
 insert into T_Accountability(type_name, owner_id, responsable_id)
 	values('창업하다', 1, 2);
+
 	
 insert into T_Party (id, name, birth_date, party_type)
-	values(seq4Party_id.nextval, '홍길동', '1920.01.01', 'person'); --21번
+	values(seq4Party_id.nextval, '홍길동', '1920.01.01', 'person');	--21번
+	

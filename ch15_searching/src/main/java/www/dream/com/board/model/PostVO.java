@@ -13,19 +13,14 @@ public class PostVO extends ReplyVO {
 	private long boardId;
 	
 	public PostVO() {
-		
 	}
 	
-	public PostVO(Long id) { // default 생성자가 없는 상태
+	public PostVO(Long id) {
 		super(id);
 	}
 
 	@Override
 	public String toString() {
-		return "PostVO [" + toString4ChildPrev() +", title=" + title + toString4ChildPost() + "]";
+		return "PostVO [" + toString4ChildPrev() + ", title=" + title + toString4ChildPost() + "]";
 	}
-	
-	//public static void main(String[] args) {
-	//	System.out.println(TableDisplayer.displayHeader(PostVO.class));
-	//}
 }

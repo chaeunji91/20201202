@@ -5,4 +5,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostVO extends PartyVO {
 	private String descript;
+	
 }

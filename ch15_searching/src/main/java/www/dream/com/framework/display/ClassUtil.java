@@ -9,24 +9,25 @@ public class ClassUtil {
 
 	public static List<Field> getListField(Class<?> targetClass, Class<Caption> annotation) {
 		List<Field> listField = new ArrayList<>();
-		//side effect(부수효과) : 인자에 내용이 호출로 바뀌어요
+		//부수효과(Side Effect) 활용. 인자에 내용이 호출로 바뀌어요
 		getAllField(targetClass, listField);
 		//ConcurrentModificationException 발생을 거부합니다.
 		Iterator<Field> iter = listField.iterator();
 		while (iter.hasNext()) {
 			Field field = iter.next();
 			Caption annoCaption = field.getAnnotation(annotation);
-			if(annoCaption == null) 
+			if (annoCaption == null)
 				iter.remove();
 		}
 		return listField;
 	}
-	
+
 	private static void getAllField(Class<?> targetClass, List<Field> listField) {
-		for(Field field : targetClass.getDeclaredFields()) { //postVO 가져온 뒤 담아있는 것 다 담음
+		for (Field field : targetClass.getDeclaredFields()) {
 			listField.add(field);
 		}
-		if(targetClass.getSuperclass() != Object.class)
-			getAllField(targetClass.getSuperclass(), listField); //recursion / commonMngInfo에 있는 필드까지 다 담음
+		if (targetClass.getSuperclass() != Object.class)
+			getAllField(targetClass.getSuperclass(), listField);
 	}
+
 }

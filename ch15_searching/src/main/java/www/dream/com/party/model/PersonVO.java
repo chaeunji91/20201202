@@ -5,8 +5,8 @@ public class PersonVO extends PartyVO {
 	private String password;
 	private boolean gender;
 	
-	public PersonVO() {
-	}
+	public PersonVO() {}
+
 	public PersonVO(Long id) {
 		super(id);
 	}

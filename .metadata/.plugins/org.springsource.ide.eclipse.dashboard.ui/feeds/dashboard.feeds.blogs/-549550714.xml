@@ -5,7 +5,33 @@
   <link rel="self" href="https://spring.io/blog.atom" />
   <id>http://spring.io/blog.atom</id>
   <icon>https://spring.io/favicon.ico</icon>
-  <updated>2020-12-14T16:30:46Z</updated>
+  <updated>2020-12-15T04:43:30Z</updated>
+  <entry>
+    <title>A Bootiful Podcast: Spring Batch co-lead Mahmoud Ben Hassine</title>
+    <link rel="alternate" href="https://spring.io/blog/2020/12/15/a-bootiful-podcast-spring-batch-co-lead-mahmoud-ben-hassine" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2020-12-15:4305</id>
+    <updated>2020-12-15T04:43:30Z</updated>
+    <content type="html">&lt;p&gt;Hi, Spring fans! In this special midweek installment I correct a mistake I made last week when I inadvertently released the episode featuring Dion Almaer, with the interview I conducted with Spring Batch co-lead Mahmoud Ben Hassine. This is the actual episode with Mahmoud Ben Hassine, with the correct title and everything! Enjoy!&lt;/p&gt;
+&lt;iframe title="Spring Batch co-lead Mahmoud Ben Hassine" height="122" width="100%" style="border: none;" scrolling="no" data-name="pb-iframe-player" src="https://www.podbean.com/media/player/rpgt4-f50e00?from=pb6admin&amp;download=1&amp;version=1&amp;auto=0&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Helvetica&amp;skin=1&amp;pfauth=&amp;btn-skin=107"&gt;&lt;/iframe&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
+  <entry>
+    <title>A Bootiful Podcast: open-web legend Dion Almaer</title>
+    <link rel="alternate" href="https://spring.io/blog/2020/12/14/a-bootiful-podcast-open-web-legend-dion-almaer" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2020-12-11:4297</id>
+    <updated>2020-12-14T23:00:00Z</updated>
+    <content type="html">&lt;p&gt;Hi, Spring fans! In this special midweek installment I (Josh Long) correct a mistake I made last week when I inadvertently released the episode featuring open-web legend Dion Almaer with the interview I conducted with the inspirational and oh-so-amazing Spring Batch co-lead Mahmoud Ben Hassine. This is the actual episode with &lt;a href="http://twitter.com/dalmaer"&gt;Dion Almaer (@dalmaer)&lt;/a&gt; who is known for so many contributions to the Java ecosystem and beyond. I know him as a former editor in chief of TheServerSide.com, but you may know him for his work championing the open web at Palm, Walmart, and Google, and many more. &lt;/p&gt;
+&lt;iframe title="Open web legend Dion Almaer" height="122" width="100%" style="border: none;" scrolling="no" data-name="pb-iframe-player" src="https://www.podbean.com/media/player/awqpe-f50e26?from=pb6admin&amp;download=1&amp;version=1&amp;auto=0&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Helvetica&amp;skin=1&amp;pfauth=&amp;btn-skin=107"&gt;&lt;/iframe&gt;
+&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
+  </entry>
   <entry>
     <title>Case Study: Change Data Capture (CDC) Analysis with CDC Debezium source and Analytics sink in Real-Time</title>
     <link rel="alternate" href="https://spring.io/blog/2020/12/14/case-study-change-data-capture-cdc-analysis-with-cdc-debezium-source-and-analytics-sink-in-real-time" />
@@ -659,19 +685,6 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter&amp;lt;Str
 &lt;!-- rendered by Sagan Renderer Service --&gt;</content>
   </entry>
   <entry>
-    <title>A Bootiful Podcast: open-web legend Dion Almaer</title>
-    <link rel="alternate" href="https://spring.io/blog/2020/12/11/a-bootiful-podcast-open-web-legend-dion-almaer" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Josh Long</name>
-    </author>
-    <id>tag:spring.io,2020-12-11:4297</id>
-    <updated>2020-12-11T00:42:34Z</updated>
-    <content type="html">&lt;p&gt;Hi Spring fans! In this episode &lt;a href="http://twitter.com/starbuxman"&gt;Josh Long (@starbuxman)&lt;/a&gt; talks to &lt;a href="http://twitter.com/dalmaer"&gt;Dion Almaer (@dalmaer)&lt;/a&gt; who is known for so may contributions to the Java ecosystem and beyond. I know him as a former editor in chief of TheServerSide.com, but you may know him for his work championing the open web at Palm, Walmart, and Google and many more. &lt;/p&gt;
-&lt;iframe title="Open web legend Dion Almaer" height="122" width="100%" style="border: none;" scrolling="no" data-name="pb-iframe-player" src="https://www.podbean.com/media/player/jnt6z-f4b4bb?from=pb6admin&amp;download=1&amp;version=1&amp;auto=0&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Helvetica&amp;skin=1&amp;pfauth=&amp;btn-skin=107"&gt;&lt;/iframe&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
     <title>Spring Boot 2.2.12 available now</title>
     <link rel="alternate" href="https://spring.io/blog/2020/12/10/spring-boot-2-2-12-available-now" />
     <category term="releases" label="Releases" />
@@ -1286,39 +1299,6 @@ compile &amp;#39;org.springframework.cloud:spring-cloud-starter-netflix-eureka-c
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;a href="https://spring.io/projects/spring-cloud-app-broker"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-cloud/spring-cloud-app-broker"&gt;GitHub&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-app-broker/docs/1.2.1/reference/"&gt;Reference Doc&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-cloud-app-broker/docs/1.2.1/api/"&gt;API Doc&lt;/a&gt;&lt;/p&gt;
-&lt;!-- rendered by Sagan Renderer Service --&gt;</content>
-  </entry>
-  <entry>
-    <title>This Week in Spring - December 1st, 2020</title>
-    <link rel="alternate" href="https://spring.io/blog/2020/12/02/this-week-in-spring-december-1st-2020" />
-    <category term="engineering" label="Engineering" />
-    <author>
-      <name>Josh Long</name>
-    </author>
-    <id>tag:spring.io,2020-12-02:4281</id>
-    <updated>2020-12-02T01:08:01Z</updated>
-    <content type="html">&lt;p&gt;Hi, Spring fans! Welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;! It&amp;rsquo;s been a very fun week since we last spoke. How are you? Can you believe that it&amp;rsquo;s already the first day of December, 2020? Time sure flies&amp;hellip; or something heh. This week is full of cool stuff so let&amp;rsquo;s get to it! &lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2020/11/26/a-bootiful-podcast-swarna-podila-on-cloud-foundry-hashicorp-and-more"&gt;A Bootiful Podcast: Swarna Podila on Cloud Foundry, Hashicorp and more&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://vmware.zoom.us/webinar/register/WN_GMipgr20RACsm8AwGgSuxw"&gt;A Spring Tools Suite office hours&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://blog.codecentric.de/en/2020/11/buildpacks-spring-boot/"&gt;Cloud Native Buildpacks with Paketo.io &amp;amp; layered jars for Spring Boot&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://go.mariadb.com/21Q1-WC-GLBL-OSSG-Developer-Kit-R2DBC-Connector-OS1090_LP-Registration.html"&gt;Developer Toolkit: How to Leverage Reactive Programming with R2DBC Async Java Connector&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://medium.com/@dt_23597/if-youre-using-kafka-with-your-microservices-you-re-probably-handling-retries-wrong-8492890899fa"&gt;If You¡¯re Using Kafka With Your Microservices, You¡¯re Probably Handling Retries Wrong | by Dave Taubler | Nov, 2020 | Medium&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://inside.java/2020/11/30/jep-390-proposed-to-target-jdk16/"&gt;JEP proposed to target JDK 16: 390: Warnings for Value-Based Classes&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://inside.java/2020/11/27/metaspace-in-openjdk16/"&gt;Metaspace in OpenJDK 16&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2020/11/30/spring-cloud-open-service-broker-3-2-0-released"&gt;Spring Cloud Open Service Broker 3.2.0 Released&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2020/11/26/spring-data-2020-0-new-and-noteworthy-in-spring-data-for-apache-cassandra-3-1"&gt;Spring Data 2020.0 - New and Noteworthy in Spring Data for Apache Cassandra 3.1&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://spring.io/blog/2020/11/25/this-week-in-spring-november-24th-2020"&gt;This Week in Spring - November 24th, 2020&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://github.com/ff4j/ff4j-samples/tree/master/spring-boot-2x/ff4j-sample-springboot2x"&gt;ff4j-samples/spring-boot-2x/ff4j-sample-springboot2x at master ¡¤ ff4j/ff4j-samples ¡¤ GitHub&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/SpringData/status/1331963740414210048"&gt; Using Cassandra? Learn what¡¯s new in #SpringData Cassandra 3.1 &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/VMwareTanzu/status/1331958399895003137"&gt;In the Tanzu Developer Center, you can get hands-on training for: &#x1f680; Agile &#x1f680; CI/CD &#x1f680; Containers &#x1f680; Kubernetes &#x1f680; Microservices &#x1f680; Python &#x1f680; Spring Get started: https:/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/VMwareTanzu/status/1332013796496461831"&gt;What do Tanzu customers think about the Tanzu Kubernetes Grid? Find out here &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/VMwareTanzu/status/1332018291905335302"&gt; Want to (re)watch an episode of #TGIK8s? You can here &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/VMwareTanzu/status/1332708365001232385"&gt;Want to know what our financial customers think of Tanzu Mission Control? Look no further.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://twitter.com/springcentral/status/1333425272784347139"&gt;Have you seen how simple it&amp;rsquo;s become recently to build @graalvm native images with Spring Boot?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://github.com/ingogriebsch/spring-hateoas-siren"&gt;A library implementing Siren as a custom Spring HATEOAS hypermedia type. Siren is a hypermedia specification for representing entities.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="https://www.theverge.com/platform/amp/2020/11/25/21719396/amazon-web-services-aws-outage-down-internet?__twitter_impression=true"&gt;A reminder that multi cloud is a necessity: prolonged AWS outage takes down a big chunk of the internet - The Verge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 &lt;!-- rendered by Sagan Renderer Service --&gt;</content>
   </entry>
 </feed>

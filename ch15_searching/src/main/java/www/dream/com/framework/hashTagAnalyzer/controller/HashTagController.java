@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,18 +19,18 @@ public class HashTagController {
 	//함수 배치 순서는 목록, 상세, 생성, 수정, 삭제
 	@Autowired
 	private HashTagService komoranService;
-		
-	@PostMapping(value="extractHashTag", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}) //여러개의 정보가 들어와 : postmapping
+	
+	@PostMapping(value = "extractHashTag", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<Set<String>> extractHashTag(PostVO post) {
 		Set<String> listHashTag = komoranService.extractHashTag(post.getTitle(), post.getContent());
 		
 		ResponseEntity<Set<String>> ret = null;
 		
-		if(listHashTag != null && !listHashTag.isEmpty()) {
+		if (listHashTag != null && !listHashTag.isEmpty()) {
 			ret = new ResponseEntity(listHashTag, HttpStatus.OK);
 		} else {
 			ret = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return ret; 
+		return ret;
 	}
 }

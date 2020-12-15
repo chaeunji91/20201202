@@ -18,7 +18,7 @@
 			value="jdbc:oracle:thin:@localhost:1521:orcl" />
 		<property name="username" value="system" />
 		<property name="password" value="admin" />
-		<property name="maximumPoolSize" value="50" />
+		<property name="maximumPoolSize" value="5" />
 	</bean>
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
@@ -29,15 +29,23 @@
 		class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-   		<property name="dataSource" ref="dataSource"/>
-   	</bean>
-   	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
-	<context:component-scan base-package="www.dream.com.framework.hashTagAnalyzer.service"></context:component-scan>
-	<context:component-scan base-package="www.dream.com.party.service"></context:component-scan>
-	<context:component-scan base-package="www.dream.com.board.service"></context:component-scan>
-	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<context:component-scan
+		base-package="www.dream.com.framework.util"></context:component-scan>
+	<context:component-scan
+		base-package="www.dream.com.framework.hashTagAnalyzer.service"></context:component-scan>
+	<context:component-scan
+		base-package="www.dream.com.party.service"></context:component-scan>
+	<context:component-scan
+		base-package="www.dream.com.board.service"></context:component-scan>
+
+	<mybatis-spring:scan
+		base-package="www.dream.com.framework.hashTagAnalyzer.model.mapper" />
 	<mybatis-spring:scan
 		base-package="www.dream.com.framework.model.mapper" />
 	<mybatis-spring:scan
@@ -46,9 +54,6 @@
 		base-package="www.dream.com.product.model.mapper" />
 	<mybatis-spring:scan
 		base-package="www.dream.com.board.model.mapper" />
-	<mybatis-spring:scan
-		base-package="www.dream.com.framework.hashTagAnalyzer.model.mapper" />		
-	
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>	
 
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 </beans>

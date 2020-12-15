@@ -13,48 +13,62 @@ import www.dream.com.framework.dataType.DreamPair;
 import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
 import www.dream.com.framework.hashTagAnalyzer.service.HashTagService;
 import www.dream.com.framework.model.Criteria;
+import www.dream.com.framework.util.BeanUtil;
 
 @Service
 public class PostService {
 	@Autowired
 	private ReplyMapper replyMapper;
-	
-	@Autowired
-	private HashTagService hashTagService;
-	
+
 	public long countTotalPostWithPaging(long boardId, Criteria criteria) {
-		//CashingExecuter sss = new cashingExecuter(null);
+		//CachingExecutor sss = new CachingExecutor(null);
 		return replyMapper.countTotalPostWithPaging(boardId, criteria);
 	}
 
 	public List<ReplyVO> findPostWithPaging(long boardId, Criteria criteria) {
 		return replyMapper.findPostWithPaging(boardId, criteria);
 	}
-	@Transactional
-	public void registerPost(PostVO post) {
-		String[] arrHashTag = post.getHashTag().split(" ");
-		//교집합 되는 것들, 새것들
-		DreamPair<List<HashTagVO>, List<HashTagVO>> pair = hashTagService.split(arrHashTag);
-		//신규 단어 등록
-		hashTagService.createHashTag(pair.getSecond()); //HashTagVO id가 채워진 side effect
-		//게시글 등록
-		replyMapper.registerPost(post);	//side effect가 들어가서 내용이 바뀜
-		
-		//전체 단어와 게시글 사이의 연결 고리르 만들어 줍니다.
-		//이 기능을 만들곳이 HashTag에 있어야 하나? 아니면 각 사용 주체에게 달려 있어야 할까?
-		
-	}
 
 	public ReplyVO findPostById(long id) {
 		return replyMapper.findReplyById(id);
 	}
 
+	@Transactional
+	public void registerPost(PostVO post) {
+		HashTagService hashTagService = BeanUtil.getBean(HashTagService.class);
+
+		DreamPair<List<HashTagVO>, List<HashTagVO>> pair = identifyOldAndNew(post, hashTagService);
+
+		replyMapper.registerPost(post);
+		hashTagService.createRelWithReply(post.getId(), pair.getFirst());
+	}
+
 	public boolean updatePost(PostVO post) {
-		
+		HashTagService hashTagService = BeanUtil.getBean(HashTagService.class);
+		hashTagService.deleteRelWithReply(post.getId());
+
+		DreamPair<List<HashTagVO>, List<HashTagVO>> pair = identifyOldAndNew(post, hashTagService);
+
+		hashTagService.createRelWithReply(post.getId(), pair.getFirst());
+
 		return replyMapper.updatePost(post);
 	}
 
 	public boolean removePost(PostVO post) {
+		HashTagService hashTagService = BeanUtil.getBean(HashTagService.class);
+		hashTagService.deleteRelWithReply(post.getId());
 		return replyMapper.removePost(post);
+	}
+
+	private DreamPair<List<HashTagVO>, List<HashTagVO>> identifyOldAndNew(PostVO post, HashTagService hashTagService) {
+		String[] arrHashTag = post.getHashTag().split(" ");
+		//교집합 되는 것들, 새것들
+		DreamPair<List<HashTagVO>, List<HashTagVO>> pair = hashTagService.split(arrHashTag);
+		/* 신규 단어 등록 */
+		hashTagService.createHashTag(pair.getSecond());
+		//전체 단어와 게시글 사이의 연결 고리를 만들어 줍니다.
+		//이 기능을 만들곳이 HashTag에 있어야하나? 아니면 각 사용 주체에게 달려있어야 할까?
+		pair.getFirst().addAll(pair.getSecond());
+		return pair;
 	}
 }

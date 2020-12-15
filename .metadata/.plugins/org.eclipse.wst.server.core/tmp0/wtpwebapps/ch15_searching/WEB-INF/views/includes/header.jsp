@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <!DOCTYPE html>
@@ -25,7 +25,9 @@
 
     <!-- Custom styles for this page -->
     <link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-	<script src="/resources/vendor/jquery/jquery.min.js"></script>
+
+    <script src="/resources/vendor/jquery/jquery.min.js"></script>
+
 </head>
 
 <body id="page-top">
@@ -362,5 +364,3 @@
 
                 </nav>
                 <!-- End of Topbar -->
-
-</html>

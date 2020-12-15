@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 import www.dream.com.framework.display.Caption;
 import www.dream.com.framework.display.Caption.WhenUse;
+import www.dream.com.framework.hashTagAnalyzer.model.HashTagVO;
 import www.dream.com.framework.model.CommonMngInfoVO;
 import www.dream.com.party.model.PartyVO;
 
 public class ReplyVO extends CommonMngInfoVO {
 	@Getter @Setter
-	private long id; //pojo 방식으로 들어감.
-	@Getter @Setter
+	private long id;
+	@Setter @Getter
 	@Caption(whenUse=WhenUse.detail, caption="게시글 내용")
 	private String content;
 	
@@ -25,20 +26,30 @@ public class ReplyVO extends CommonMngInfoVO {
 	@Caption(whenUse=WhenUse.all, caption="작성자")
 	private PartyVO writer;
 	private List<ReplyVO> listReplies;
-	
+	@Getter @Setter
+	private List<HashTagVO> listHashTag;
+
 	public ReplyVO() {
 	}
 	
-	public ReplyVO(Long id) { //default 생성자가 없는 상태에서
+	public ReplyVO(Long id) {
 		super();
 		this.id = id;
 	}
 
+	public String getHashTagAsString() {
+		StringBuilder sb = new StringBuilder();
+		for (HashTagVO ht : listHashTag)
+			sb.append(ht.getWord()).append(" ");
+		return sb.toString();
+	}
+	
 	@Override
 	public String toString() {
 		return "ReplyVO [id=" + id + ", content=" + content + ", writer=" + writer + ", listReplies=" + listReplies
 				+ ", regDate=" + regDate + ", updateDate=" + updateDate + "]";
 	}
+	
 	protected String toString4ChildPrev() {
 		return "id=" + id;
 	}
@@ -46,4 +57,5 @@ public class ReplyVO extends CommonMngInfoVO {
 		return ", content=" + content + ", writer=" + writer + ", listReplies=" + listReplies
 				+ ", regDate=" + regDate + ", updateDate=" + updateDate;
 	}
+	
 }

@@ -24,7 +24,6 @@
 			<case value="elementary" resultMap="elementaryResultMap" />
 		</discriminator>
 	</resultMap>
-
 	<resultMap id="composerResultMap"
 		type="www.dream.com.product.model.ProductComposerVO" extends="productResultMap">
 		<!-- Composition 관계, 1:N -->
@@ -32,7 +31,6 @@
 			resultMap="productResultMap" columnPrefix="d_">
 		</collection>
 	</resultMap>
-	
 	<resultMap id="elementaryResultMap"
 		type="www.dream.com.product.model.ElementaryProductVO"
 		extends="productResultMap">
@@ -50,7 +48,6 @@
 			<case value="elementary" resultMap="elementaryWithSellerResultMap" />
 		</discriminator>
 	</resultMap>
-
 	<resultMap id="composerWithSellerResultMap"
 		type="www.dream.com.product.model.ProductComposerVO" extends="productWithSellerResultMap">
 		<!-- Composition 관계, 1:N -->
@@ -58,7 +55,6 @@
 			resultMap="productResultMap" columnPrefix="d_">
 		</collection>
 	</resultMap>
-	
 	<resultMap id="elementaryWithSellerResultMap"
 		type="www.dream.com.product.model.ElementaryProductVO"
 		extends="productWithSellerResultMap">

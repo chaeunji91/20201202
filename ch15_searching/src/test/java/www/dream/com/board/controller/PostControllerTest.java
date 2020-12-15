@@ -23,27 +23,29 @@ import www.dream.com.board.model.ReplyVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration({"file:src\\main\\webapp\\WEB-INF\\spring\\root-context.xml", 
-	"file:src\\main\\webapp\\WEB-INF\\spring\\appServlet\\servlet-context.xml"})
+@ContextConfiguration({"file:src\\main\\webapp\\WEB-INF\\spring\\appServlet\\servlet-context.xml",
+	"file:src\\main\\webapp\\WEB-INF\\spring\\root-context.xml"})
 public class PostControllerTest {
 	@Autowired
 	private WebApplicationContext ctx;
-	private MockMvc mockMvc;	//Browser 흉내내기
+	
+	private MockMvc mockMvc;	//Browser 흉내기
 	
 	@Before
 	public void setup() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 	}
+	
 	@Test
 	public void testListPost() {
 		try {
-			MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/post/list?boardId=1"); //공지사항
+			MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/post/list?boardId=1");
 			ResultActions resultActions = mockMvc.perform(requestBuilder);
 			MvcResult mvcResult = resultActions.andReturn();
 			ModelAndView mav = mvcResult.getModelAndView();
 			ModelMap mm = mav.getModelMap();
 			List<ReplyVO> list = (List<ReplyVO>) mm.getAttribute("listPost");
-			for(ReplyVO post : list) {
+			for (ReplyVO post : list) {
 				System.out.println(post);
 			}
 		} catch (Exception e) {
