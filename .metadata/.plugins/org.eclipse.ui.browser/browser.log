@@ -80,3 +80,13 @@
 12월 15, 2020 15:04:34.837 NEW SESSION
 12월 15, 2020 15:04:34.837 [9844:4608:1215/150434.836:ERROR:device_event_log_impl.cc(211)] [15:04:34.836] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
 12월 15, 2020 15:14:30.538 [1215/151430.536:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+
+12월 16, 2020 09:41:59.958 NEW SESSION
+12월 16, 2020 09:41:59.958 [11364:5812:1216/094159.957:ERROR:device_event_log_impl.cc(211)] [09:41:59.956] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+12월 16, 2020 09:43:29.727 [8548:5312:1216/094329.727:ERROR:device_event_log_impl.cc(211)] [09:43:29.726] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+12월 16, 2020 09:45:05.737 [11740:8044:1216/094505.736:ERROR:device_event_log_impl.cc(211)] [09:45:05.737] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+12월 16, 2020 09:54:55.252 [1216/095455.249:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+12월 16, 2020 10:19:26.804 [5180:10172:1216/101926.804:ERROR:device_event_log_impl.cc(211)] [10:19:26.804] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+12월 16, 2020 10:29:24.519 [1216/102924.519:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+12월 16, 2020 10:40:39.161 [11728:8324:1216/104039.161:ERROR:device_event_log_impl.cc(211)] [10:40:39.161] Bluetooth: bluetooth_adapter_winrt.cc:1073 Getting Default Adapter failed.
+12월 16, 2020 10:50:28.933 [1216/105028.932:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)

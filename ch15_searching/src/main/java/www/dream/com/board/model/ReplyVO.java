@@ -11,25 +11,27 @@ import www.dream.com.framework.model.CommonMngInfoVO;
 import www.dream.com.party.model.PartyVO;
 
 public class ReplyVO extends CommonMngInfoVO {
-	@Getter @Setter
+	@Getter 
 	private long id;
-	@Setter @Getter
+	@Getter
 	@Caption(whenUse=WhenUse.detail, caption="게시글 내용")
 	private String content;
 	
-	@Getter @Setter
+	@Getter 
 	@Caption(whenUse=WhenUse.detail, caption="해쉬 태그")
 	private String hashTag;
 	
 	/* ------------   연관 정보 정의 영역    ------------------ */
-	@Getter @Setter
+	@Getter 
 	@Caption(whenUse=WhenUse.all, caption="작성자")
 	private PartyVO writer;
 	private List<ReplyVO> listReplies;
-	@Getter @Setter
+	@Getter 
 	private List<HashTagVO> listHashTag;
 
 	public ReplyVO() {
+		int i = 0;
+		i++;
 	}
 	
 	public ReplyVO(Long id) {
@@ -37,6 +39,22 @@ public class ReplyVO extends CommonMngInfoVO {
 		this.id = id;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public void setHashTag(String hashTag) {
+		this.hashTag = hashTag;
+	}
+	
+	public void setWriter(PartyVO writer) {
+		this.writer = writer;
+	}
+	
 	public String getHashTagAsString() {
 		StringBuilder sb = new StringBuilder();
 		for (HashTagVO ht : listHashTag)
@@ -57,5 +75,7 @@ public class ReplyVO extends CommonMngInfoVO {
 		return ", content=" + content + ", writer=" + writer + ", listReplies=" + listReplies
 				+ ", regDate=" + regDate + ", updateDate=" + updateDate;
 	}
+
+
 	
 }

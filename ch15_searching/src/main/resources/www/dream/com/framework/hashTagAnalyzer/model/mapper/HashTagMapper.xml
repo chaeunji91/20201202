@@ -33,12 +33,10 @@
 		 order by id desc
 	</select>
 	<insert id="createHashTag">
-	<if test="!list.isEmpty()">
  	   <foreach item="obj" collection="list" open="INSERT ALL " close=" SELECT * FROM DUAL">
 			INTO T_Hash_Tag(id, word)
 			VALUES (#{obj.id}, #{obj.word})
  	   </foreach>
-	</if>
 	</insert>
 	
 	<!-- 	public void createRelWithReply(@Param("replyId") long replyId, @Param("listHashTag") List<HashTagVO> listHashTag);

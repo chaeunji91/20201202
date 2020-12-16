@@ -9,7 +9,7 @@ import www.dream.com.framework.model.CommonMngInfoVO;
 public class PartyVO extends CommonMngInfoVO {
 	@Getter
 	private long id;
-	@Getter
+	@Getter 
 	private String name;
 	private Date birthDate;
 	
